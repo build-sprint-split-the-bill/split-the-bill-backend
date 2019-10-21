@@ -4,7 +4,7 @@ exports.seed = function(knex) {
       return knex('friends').insert([
        {
          name: "Zach",
-         email: "zach@gmail.com"
+         email: "zach@hotmail.com"
        },
        {
         name: "Amy",
@@ -12,11 +12,11 @@ exports.seed = function(knex) {
       },
       {
         name: "Bob",
-        email: "bob@gmail.com"
+        email: "bob@yahoo.com"
       },
       {
         name: "Tim",
-        email: "tim@gmail.com"
+        email: "tim@myspace.com"
       },
       {
         name: "Cook",

@@ -1,17 +1,20 @@
 const db = require('../dbConfig')
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     get,
     findBy,
     findById,
     insert,
-    update,
-    remove
+    hashPassword,
+    generateToken
 }
 
 function get() {
-    return db(user)
+    return db('users')
 }
+
 
 function findById(id) {
     return db('users')
@@ -36,16 +39,26 @@ async function insert(user) {
       .first()
   }
 
-  function update(id, user) {
-      return db("users")
-      .where({ id })
-      .update(user);
+ 
+
+
+  function hashPassword(req, res, next) {
+    let user = req.body;
+    const hash = bcrypt.hashSync(user.password, 5);
+    user.password = hash;
+    next();
   }
 
-  function remove(id) {
-      return db("users")
-      .where({ id })
-      .del();
+
+   function generateToken (user) {
+    const payload = {
+      subject: user.id,
+      username: user.username,
+    };
+    const secret = process.env.SECRET || "test"
+    const options = {
+      expiresIn: "1d"
+    };
+    return jwt.sign(payload, secret, options);
+  
   }
-  
-  

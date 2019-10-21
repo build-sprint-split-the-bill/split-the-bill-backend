@@ -1,17 +1,15 @@
 const express = require('express');
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const Users = require("../../data/models/userModel");
-const { generateToken } = require("../middleware/auth");
+const db = require("../../data/dbConfig");
 const router = express.Router();
 router.use(express.json());
 
 
 
-router.post('/register', (req, res) => {
+router.post('/register', Users.hashPassword, (req, res) => {
     let user = req.body;
-    const hash = bcrypt.hashSync(user.password, 12);
-    user.password = hash;
-  
     Users.insert(user)
     .then(saved => {
       res.status(201).json(saved)
@@ -24,48 +22,46 @@ router.post('/register', (req, res) => {
 
 
   router.post("/login", (req, res) => {
-    let { username, password } = req.body;
-    Users.findBy(username)
+    let username = req.body.username;
+    let password = req.body.password;
+    db("users")
+      .where({ username })
       .first()
       .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
-          const token = generateToken(user);
-          res.status(200).json({ id: user.id, token });
+          const token = Users.generateToken(user);
+          res.status(200).json({ token });
         } else {
-          res.status(401).json({ message: "invalid creds" });
+          res.status(401).json({ Error: "password fail" });
         }
       })
-      .catch(err => {
-        res.status(500).json({error: err.message, message: "500 error in login" });
+      .catch(error => {
+        res.status(500).json({ Error: "Didn't get past findUser" });
       });
   });
   
   
+  
+  
+  router.post("/find/:id", (req, res) => {
+    const id = req.params.id;
+    Users
+      .findById(id)
+      .then(user => {
+        res.status(200).json(user);
+      })
+      .catch(error => {
+        res.status(500).json({ Error: "Something's gone horribly wrong" });
+      });
+  });
 
 
 
+  router.get("/", (req, res) => {
+    Users.get().then(users => {
+      res.status(200).json(users);
+    });
+  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.get('/', async (req,res,next) => {
-    try {
-        const user = await User.get();
-        res.status(200).json(user); 
-    } catch (err) {
-        next(err)
-    }
-})
 
 module.exports = router;

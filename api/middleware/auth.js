@@ -15,17 +15,4 @@ module.exports =  {
 },
 
 
-generateToken: function(user) {
-    const payload = {
-      subject: user.id,
-      username: user.username,
-      roles: user.roles_id
-    };
-
-    const options = {
-      expiresIn: `24h`,
-    };
-    return jwt.sign(payload, secrets.jwtSecret, options);
-
-  }
-};
+}
