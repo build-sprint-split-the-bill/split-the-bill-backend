@@ -39,7 +39,7 @@ async function insert(bill) {
   function update(id, bills) {
       return db("bills")
       .where({ id })
-      .update(user);
+      .update(bills);
   }
 
   function remove(id) {
