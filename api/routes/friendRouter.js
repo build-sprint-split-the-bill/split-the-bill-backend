@@ -26,7 +26,7 @@ router.post('/', (req,res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    Bills.remove(req.params.id)
+    Friends.remove(req.params.id)
     .then(friend => {
       if(friend) {
         res.status(201).json(friend)
