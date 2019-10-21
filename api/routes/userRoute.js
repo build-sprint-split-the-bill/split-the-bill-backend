@@ -1,8 +1,11 @@
 const express = require('express');
+const bcrypt = require("bcryptjs");
 const Users = require("../../data/models/userModel");
+const { generateToken } = require("../middleware/auth");
 const router = express.Router();
 router.use(express.json());
-const bcrypt = require("bcryptjs");
+
+
 
 router.post('/register', (req, res) => {
     let user = req.body;
@@ -20,7 +23,22 @@ router.post('/register', (req, res) => {
   });
 
 
-
+  router.post('/login', (req, res) => {
+    let { username, password} = req.body;
+    Users.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user)
+        res.status(200).json({token});
+      } else {
+        res.status(401).json({ error: error, message: "please provide the valid credentialsthere was a problem logging in the user"})
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error: error, message: 'error in login'})
+    })
+  });
 
 
 
