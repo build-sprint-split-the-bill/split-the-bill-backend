@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const secrets = require('../secrets')
-secrets = secrets[process.env.NODE_ENV];
+// secrets = secrets[process.env.NODE_ENV];
 
 module.exports =  {
   myprivate: function (req, res, next)  {
