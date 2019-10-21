@@ -1,51 +1,15 @@
-const db = require('../dbConfig')
+const express = require("express");
+const router = express.Router();
+const Bills = require("../../data/models/billsModel");
+// const { myprivate } = require("../middleware/auth");
+router.use(express.json());
 
-module.exports = {
-    get,
-    findBy,
-    findById,
-    insert,
-    update,
-    remove
-}
 
-function get() {
-    return db('bills')
-}
-
-function findById(id) {
-    return db('bills')
-    .where({ id })
-    .first()
-}
-
-async function insert(bill) {
-    if (process.env.NODE_ENV === "production") {
-      const [newBill] = await db("bills").insert(bill, ["id"]);
-      return findById(newBill.id);
-    } else {
-      const [id] = await db("bills").insert(bill);
-      return findById(id);
-
+router.get("/", async (req, res, next) => {
+    try {
+      const users = await Bills.get();
+      res.status(200).json(users);
+    } catch (err) {
+      next(err);
     }
-  }
-
-  function findBy(name) {
-      return db('bills')
-      .where({ name })
-      .first()
-  }
-
-  function update(id, bills) {
-      return db("bills")
-      .where({ id })
-      .update(user);
-  }
-
-  function remove(id) {
-      return db("bills")
-      .where({ id })
-      .del();
-  }
-  
-  
+  });
