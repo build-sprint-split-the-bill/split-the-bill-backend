@@ -6,7 +6,7 @@ module.exports = {
   getAll,
   addNewUser,
   findUser,
-  hashPassword,
+  hashPassword, 
   generateToken
 };
 
