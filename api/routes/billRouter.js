@@ -15,17 +15,17 @@ router.get("/", async (req, res, next) => {
   });
 
 
-router.post('/', (req,res) => {
-  let bill = req.body;
-  Bills.insert(bill)
-  .then(saved => {
-    res.status(200).json(saved)
-  })
-  .catch(error => {
-    console.error(error)
-    res.status(500).json({message: "internal server error"})
-  })
-})
+  router.post("/", (req, res) => {
+    let bill = req.body;
+    Bills.insert(bill)
+      .then(saved => {
+        res.status(200).json(saved);
+      })
+      .catch(error => {
+        console.error(error)
+        res.status(500).json({message: "internal server error"});
+      });
+  });
 
 router.delete('/:id', (req, res) => {
   Bills.remove(req.params.id)

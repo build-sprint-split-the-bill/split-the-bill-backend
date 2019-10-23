@@ -20,14 +20,7 @@ function findById(id) {
 }
 
 async function insert(bill) {
-    if (process.env.NODE_ENV === "production") {
-      const [newBill] = await db("bills").insert(bill, ["id"]);
-      return findById(newBill.id);
-    } else {
-      const [id] = await db("bills").insert(bill);
-      return findById(id);
-
-    }
+    return db("bills").insert(bill);
   }
 
   function findBy(name) {
