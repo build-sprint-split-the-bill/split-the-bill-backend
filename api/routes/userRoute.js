@@ -24,10 +24,11 @@ router.post("/register", userFunc.hashPassword, (req, res) => {
     });
 });
 
-router.post("/find/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const id = req.params.id;
+  const username = req.body.username
   userFunc
-    .findUser(id)
+    .findUser(username)
     .then(user => {
       res.status(200).json(user);
     })
@@ -45,7 +46,7 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = userFunc.generateToken(user);
-        res.status(200).json({ token });
+        res.status(200).json({ token: token, id: user.id  });
       } else {
         res.status(401).json({ Error: "password fail" });
       }
